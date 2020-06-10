@@ -6,7 +6,7 @@ services:
     image: grafana/grafana:latest
     environment:
       VIRTUAL_HOST: grafana.${TLD}
-      PROXY_LOCATION: grafana
+      LETSENCRYPT_HOST: grafana.${TLD}
       VIRTUAL_PORT: 3000
     volumes:
       - ${VOLUMES_PATH}/grafana:/var/lib/grafana
