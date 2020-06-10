@@ -34,7 +34,7 @@ services:
     restart: unless-stopped
     user: "1000"
     ports:
-      -"9090:9090"
+      - "9090:9090"
     networks:
       - monitoring-network
     depends_on:
