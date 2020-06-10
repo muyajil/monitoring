@@ -1,9 +1,9 @@
-version: "3"
+version: "3.5"
+
 services:
   # START GRAFANA
   grafana:
     image: grafana/grafana:latest
-    container_name: grafana
     environment:
       VIRTUAL_HOST: grafana.${TLD}
       PROXY_LOCATION: grafana
@@ -11,14 +11,16 @@ services:
     volumes:
       - ${VOLUMES_PATH}/grafana:/var/lib/grafana
     user: "1000"
-    links:
-      - prometheus:prometheus
+    depends_on:
+      - prometheus
     restart: unless-stopped
+    networks:
+      - base-network
+      - monitoring-network
   # END GRAFANA
   # START PROMETHEUS
   prometheus:
     image: prom/prometheus:latest
-    container_name: prometheus
     volumes:
       - ${VOLUMES_PATH}/prometheus/etc:/etc/prometheus/
       - ${VOLUMES_PATH}/prometheus/data:/prometheus
@@ -30,17 +32,16 @@ services:
       - '--storage.tsdb.retention=200h'
       - '--web.enable-lifecycle'
     restart: unless-stopped
-    ports:
-      - "9090:9090"
     user: "1000"
-    links:
-      - cadvisor:cadvisor
-      - nodeexporter:nodeexporter
+    networks:
+      - monitoring-network
+    depends_on:
+      - nodeexporter
+      - cadvisor
   # END PROMETHEUS
   # START NODEEXPORTER
   nodeexporter:
     image: prom/node-exporter:latest
-    container_name: nodeexporter
     user: root
     privileged: true
     volumes:
@@ -52,17 +53,24 @@ services:
       - '--path.sysfs=/host/sys'
       - '--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|host|etc)($$|/)'
     restart: unless-stopped
-    ports:
-      - "9100:9100"
+    networks:
+      - monitoring-network
   # END NODEEXPORTER
   # START CADVISOR
   cadvisor:
     image: google/cadvisor:latest
-    container_name: cadvisor
-    ports:
-    - 8080:8080
     volumes:
-    - /:/rootfs:ro
-    - /var/run:/var/run:rw
-    - /sys:/sys:ro
-    - /var/lib/docker/:/var/lib/docker:ro
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    restart: unless-stopped
+    networks:
+      - monitoring-network
+  # END CADVISOR
+
+networks:
+  base-network:
+    external: true
+  monitoring-network:
+    name: monitoring-network
