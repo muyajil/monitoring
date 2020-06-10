@@ -8,15 +8,24 @@ services:
       VIRTUAL_HOST: grafana.${TLD}
       LETSENCRYPT_HOST: grafana.${TLD}
       VIRTUAL_PORT: 3000
+      GF_RENDERING_SERVER_URL: http://renderer:8081/render
+      GF_RENDERING_CALLBACK_URL: http://grafana:3000/
+      GF_LOG_FILTERS: rendering:debug
     volumes:
       - ${VOLUMES_PATH}/grafana:/var/lib/grafana
     user: "1000"
     depends_on:
       - prometheus
+      - renderer
     restart: unless-stopped
     networks:
       - base-network
       - monitoring-network
+  renderer:
+    image: grafana/grafana-image-renderer:latest
+    networks:
+      - monitoring-network
+    restart: unless-stopped
   # END GRAFANA
   # START PROMETHEUS
   prometheus:
