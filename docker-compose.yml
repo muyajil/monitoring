@@ -66,6 +66,14 @@ services:
     networks:
       - monitoring-network
   # END NODEEXPORTER
+  # START BLACKBOX EXPORTER
+  blackbox-exporter:
+    image: prom/blackbox-exporter:latest
+    restart: unless-stopped
+    networks:
+      - base-network
+      - monitoring-network
+  # END BLACKBOX EXPORTER
   # START CADVISOR
   cadvisor:
     image: google/cadvisor:latest
