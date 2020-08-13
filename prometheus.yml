@@ -39,7 +39,7 @@ scrape_configs:
         - http://bitwarden:80
         - http://jupyterhub:8000
         - http://grafana:3000
-        - http://duplicati:8200
+        - http://duplicacy:3875
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target
