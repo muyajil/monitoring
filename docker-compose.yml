@@ -31,7 +31,7 @@ services:
   prometheus:
     image: prom/prometheus:latest
     volumes:
-      - ${VOLUMES_PATH}/prometheus/etc:/etc/prometheus/
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
       - ${VOLUMES_PATH}/prometheus/data:/prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
