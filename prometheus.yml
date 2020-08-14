@@ -40,6 +40,11 @@ scrape_configs:
         - http://jupyterhub:8000
         - http://grafana:3000
         - http://duplicacy:3875
+        - http://gsuite-backup:80
+        - http://blackbox-exporter:9115
+        - http://cadvisor:8080
+        - http://prometheus:9090
+        - http://nodeexporter:9100
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target
