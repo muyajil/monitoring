@@ -45,6 +45,7 @@ scrape_configs:
         - http://cadvisor:8080
         - http://prometheus:9090
         - http://nodeexporter:9100
+        - http://bazarr:6767
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target
