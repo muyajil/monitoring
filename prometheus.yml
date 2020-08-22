@@ -46,6 +46,7 @@ scrape_configs:
         - http://prometheus:9090
         - http://nodeexporter:9100
         - http://bazarr:6767
+        - http://filedrop:5000
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target
