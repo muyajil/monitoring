@@ -17,7 +17,7 @@
   "gnetId": 893,
   "graphTooltip": 1,
   "id": 7,
-  "iteration": 1598118101564,
+  "iteration": 1619419126820,
   "links": [],
   "panels": [
     {
@@ -87,7 +87,7 @@
         "showThresholdLabels": false,
         "showThresholdMarkers": true
       },
-      "pluginVersion": "7.1.3",
+      "pluginVersion": "7.3.2",
       "targets": [
         {
           "expr": "(node_filesystem_size_bytes{mountpoint=\"/home\"} - node_filesystem_free_bytes{mountpoint=\"/home\"} )/ node_filesystem_size_bytes{mountpoint=\"/home\"}",
@@ -101,7 +101,7 @@
           "step": 1800
         }
       ],
-      "title": "Media Disk",
+      "title": "RAID Array",
       "type": "gauge"
     },
     {
@@ -171,7 +171,7 @@
         "showThresholdLabels": false,
         "showThresholdMarkers": true
       },
-      "pluginVersion": "7.1.3",
+      "pluginVersion": "7.3.2",
       "targets": [
         {
           "expr": "((node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes) * 100",
@@ -227,8 +227,11 @@
       "linewidth": 2,
       "links": [],
       "nullPointMode": "null as zero",
+      "options": {
+        "alertThreshold": true
+      },
       "percentage": false,
-      "pluginVersion": "7.1.3",
+      "pluginVersion": "7.3.2",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -297,32 +300,41 @@
       }
     },
     {
-      "cacheTimeout": null,
-      "datasource": "Prometheus Server",
+      "datasource": null,
       "fieldConfig": {
         "defaults": {
           "custom": {},
-          "decimals": 0,
           "mappings": [
             {
-              "id": 0,
-              "op": "=",
-              "text": "N/A",
+              "from": "",
+              "id": 1,
+              "text": "ACTIVE",
+              "to": "",
               "type": 1,
-              "value": "null"
+              "value": "1"
+            },
+            {
+              "from": "",
+              "id": 2,
+              "text": "INACTIVE",
+              "to": "",
+              "type": 1,
+              "value": "0"
             }
           ],
-          "nullValueMode": "connected",
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
+                "color": "dark-red",
                 "value": null
+              },
+              {
+                "color": "green",
+                "value": 1
               }
             ]
-          },
-          "unit": "s"
+          }
         },
         "overrides": []
       },
@@ -332,43 +344,34 @@
         "x": 0,
         "y": 6
       },
-      "id": 24,
-      "interval": "",
-      "links": [],
-      "maxDataPoints": 100,
+      "id": 65,
       "options": {
         "colorMode": "value",
-        "fieldOptions": {
-          "calcs": [
-            "lastNotNull"
-          ]
-        },
         "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "horizontal",
+        "justifyMode": "center",
+        "orientation": "auto",
         "reduceOptions": {
           "calcs": [
-            "last"
+            "lastNotNull"
           ],
           "fields": "",
           "values": false
         },
         "textMode": "auto"
       },
-      "pluginVersion": "7.1.3",
+      "pluginVersion": "7.3.2",
       "targets": [
         {
-          "expr": "time() - node_boot_time_seconds",
-          "hide": false,
-          "instant": false,
+          "expr": "node_md_state{device=\"md0\", state=\"active\"}",
+          "format": "time_series",
           "interval": "",
-          "intervalFactor": 2,
           "legendFormat": "",
-          "refId": "A",
-          "step": 1800
+          "refId": "A"
         }
       ],
-      "title": "Uptime",
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "/dev/md0",
       "type": "stat"
     },
     {
@@ -411,7 +414,7 @@
       },
       "gridPos": {
         "h": 3,
-        "w": 4,
+        "w": 2,
         "x": 2,
         "y": 6
       },
@@ -438,7 +441,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "7.1.3",
+      "pluginVersion": "7.3.2",
       "targets": [
         {
           "expr": "node_load1 / count without(cpu, mode) (node_cpu_seconds_total{mode=\"idle\"})",
@@ -450,6 +453,68 @@
         }
       ],
       "title": "Load",
+      "type": "stat"
+    },
+    {
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 3
+              },
+              {
+                "color": "orange",
+                "value": 4
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 2,
+        "x": 4,
+        "y": 6
+      },
+      "id": 66,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "7.3.2",
+      "targets": [
+        {
+          "expr": "node_md_disks{state=\"active\", device=\"md0\"}",
+          "format": "time_series",
+          "interval": "",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Active Disks",
       "type": "stat"
     },
     {
@@ -514,7 +579,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "7.1.3",
+      "pluginVersion": "7.3.2",
       "targets": [
         {
           "expr": "count(rate(container_last_seen{name=~\".+\"}[$interval]))",
@@ -567,8 +632,11 @@
       "linewidth": 1,
       "links": [],
       "nullPointMode": "null as zero",
+      "options": {
+        "alertThreshold": true
+      },
       "percentage": false,
-      "pluginVersion": "7.1.3",
+      "pluginVersion": "7.3.2",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -692,7 +760,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "7.1.3",
+      "pluginVersion": "7.3.2",
       "targets": [
         {
           "expr": "probe_success{instance=\"http://pihole:80\"}",
@@ -768,7 +836,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "7.1.3",
+      "pluginVersion": "7.3.2",
       "targets": [
         {
           "expr": "probe_success{instance=\"http://jackett:9117\"}",
@@ -844,7 +912,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "7.1.3",
+      "pluginVersion": "7.3.2",
       "targets": [
         {
           "expr": "probe_success{instance=\"http://netdata:19999\"}",
@@ -920,7 +988,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "7.1.3",
+      "pluginVersion": "7.3.2",
       "targets": [
         {
           "expr": "probe_success{instance=\"http://sonarr:8989\"}",
@@ -996,7 +1064,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "7.1.3",
+      "pluginVersion": "7.3.2",
       "targets": [
         {
           "expr": "probe_success{instance=\"http://tautulli:8181\"}",
@@ -1072,7 +1140,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "7.1.3",
+      "pluginVersion": "7.3.2",
       "targets": [
         {
           "expr": "probe_success{instance=\"http://jupyterhub:8000\"}",
@@ -1148,7 +1216,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "7.1.3",
+      "pluginVersion": "7.3.2",
       "targets": [
         {
           "expr": "probe_success{instance=\"http://nzbget:6789\"}",
@@ -1224,7 +1292,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "7.1.3",
+      "pluginVersion": "7.3.2",
       "targets": [
         {
           "expr": "probe_success{instance=\"http://duplicacy:3875\"}",
@@ -1282,8 +1350,11 @@
       "linewidth": 2,
       "links": [],
       "nullPointMode": "null as zero",
+      "options": {
+        "alertThreshold": true
+      },
       "percentage": false,
-      "pluginVersion": "7.1.3",
+      "pluginVersion": "7.3.2",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -1412,7 +1483,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "7.1.3",
+      "pluginVersion": "7.3.2",
       "targets": [
         {
           "expr": "probe_success{instance=\"http://ombi:3579\"}",
@@ -1488,7 +1559,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "7.1.3",
+      "pluginVersion": "7.3.2",
       "targets": [
         {
           "expr": "probe_success{instance=\"http://portainer:9000\"}",
@@ -1564,7 +1635,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "7.1.3",
+      "pluginVersion": "7.3.2",
       "targets": [
         {
           "expr": "probe_success{instance=\"http://radarr:7878\"}",
@@ -1640,7 +1711,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "7.1.3",
+      "pluginVersion": "7.3.2",
       "targets": [
         {
           "expr": "probe_success{instance=\"http://transmission:9091\"}",
@@ -1716,7 +1787,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "7.1.3",
+      "pluginVersion": "7.3.2",
       "targets": [
         {
           "expr": "probe_success{instance=\"http://bitwarden:80\"}",
@@ -1792,7 +1863,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "7.1.3",
+      "pluginVersion": "7.3.2",
       "targets": [
         {
           "expr": "probe_success{instance=\"http://gsuite-backup:80\"}",
@@ -1868,7 +1939,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "7.1.3",
+      "pluginVersion": "7.3.2",
       "targets": [
         {
           "expr": "probe_success{instance=\"http://blackbox-exporter:9115\"}",
@@ -1944,7 +2015,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "7.1.3",
+      "pluginVersion": "7.3.2",
       "targets": [
         {
           "expr": "probe_success{instance=\"http://nodeexporter:9100\"}",
@@ -1999,8 +2070,11 @@
       "linewidth": 2,
       "links": [],
       "nullPointMode": "null as zero",
+      "options": {
+        "alertThreshold": true
+      },
       "percentage": false,
-      "pluginVersion": "7.1.3",
+      "pluginVersion": "7.3.2",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -2129,7 +2203,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "7.1.3",
+      "pluginVersion": "7.3.2",
       "targets": [
         {
           "expr": "probe_success{instance=\"http://cadvisor:8080\"}",
@@ -2205,7 +2279,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "7.1.3",
+      "pluginVersion": "7.3.2",
       "targets": [
         {
           "expr": "probe_success{instance=\"http://prometheus:9090\"}",
@@ -2281,7 +2355,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "7.1.3",
+      "pluginVersion": "7.3.2",
       "targets": [
         {
           "expr": "probe_success{instance=\"http://bazarr:6767\"}",
@@ -2357,7 +2431,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "7.1.3",
+      "pluginVersion": "7.3.2",
       "targets": [
         {
           "expr": "probe_success{instance=\"http://filedrop:5000\"}",
@@ -2387,6 +2461,7 @@
         },
         "datasource": "Prometheus Server",
         "definition": "",
+        "error": null,
         "hide": 0,
         "includeAll": true,
         "label": "Container Group",
@@ -2414,6 +2489,7 @@
           "value": "$__auto_interval_interval"
         },
         "datasource": null,
+        "error": null,
         "hide": 0,
         "includeAll": false,
         "label": "Interval",
@@ -2517,6 +2593,7 @@
         },
         "datasource": "Prometheus Server",
         "definition": "",
+        "error": null,
         "hide": 0,
         "includeAll": false,
         "label": "Node",
@@ -2567,5 +2644,5 @@
   "timezone": "browser",
   "title": "Docker and system monitoring",
   "uid": "eFuhmbiMz",
-  "version": 27
+  "version": 31
 }
