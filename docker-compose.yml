@@ -78,7 +78,7 @@ services:
   # END BLACKBOX EXPORTER
   # START CADVISOR
   cadvisor:
-    image: google/cadvisor:latest
+    image: gcr.io/cadvisor/cadvisor:latest
     volumes:
       - /:/rootfs:ro
       - /var/run:/var/run:rw
